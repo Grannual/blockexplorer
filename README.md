@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Ethereum Block Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The lessons this week covered the Ethereum JSON-RPC API and the `ethers.js` library giving us the ability to query the Ethereum blockchain and make transactions!
 
-## Available Scripts
+Let's put that knowledge to the test by building our very own **Ethereum Block Explorer**!
 
-In the project directory, you can run:
+Blockexplorers give us the ability to view lots of different information about the blockchain including data about:
+  * the blockchain network itself
+  * blocks in the blockchain
+  * transactions in a block
+  * accounts
+  * and many other things
+  
+[Etherscan](https://etherscan.io/) is a good example of an Ethereum blockexplorer. Check it out to get familiar with how blockexplorers generally work.
 
-### `npm start`
+This particular project is very much open-ended. We'll add some challenges here to get your imagination going, but use Etherscan as a guide for features you might consider building in your project.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Clone this project to pull down some basic starter code.
 
-### `npm test`
+After that cd into the base directory of the project and run `npm install` to download all the project dependencies.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+In this project we chose to use React for a front-end and added minimal front-end code to get you going, but feel free to use any front-end stack you like.
 
-### `npm run build`
+Unlike the lessons this week that used the Ethereum JSON-RPC API and the `ethers.js` library to communicate with the Ethereum network, the starter code in this project uses the [AlchemySDK](https://docs.alchemy.com/reference/alchemy-sdk-quickstart?a=eth-bootcamp). The AlchemySDK's core package wraps almost all of the `ethers.js` provider functionality that we learned about and should feel very familiar to you. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+For example, the following `ethers.js` code
+```js
+const blockNumber = await provider.getBlockNumber();
+```
+can be written using the AlchemySDK like so:
+```js
+const blockNumber = await alchemy.core.getBlockNumber()
+```
+Another `ethers.js ` example
+```js
+const transcations = await provider.getBlockWithTransactions(SOME_BLOCK_NUMBER)
+```
+translates to
+```js
+const transactions = await alchemy.core.getBlockWithTransactions(SOME_BLOCK_NUMBER)
+```
+and so on.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+There are some `ethers.js` provider functions that are not often-used and therefore not included in `alchemy.core`. But if you ever need the full ethers provider functionality you can access the provider directly with the following code:
+```js
+const ethersProvider = await alchemy.config.getProvider();
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+You can find lots of good docs on the AlchemySDK here:
+  * [API Quickstart](https://docs.alchemy.com/reference/alchemy-sdk-quickstart?a=eth-bootcamp)
+  * [API Overview](https://docs.alchemy.com/reference/api-overview?a=eth-bootcamp)
 
-### `npm run eject`
+Alright, without further ado, let's get started!
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 1. Create a unique Alchemy API key
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+If you have not already done so, create a unique Alchemy API Mainnet key
+for your project as [described here](https://docs.alchemy.com/reference/api-overview?a=eth-bootcamp).
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 2. Add your API key to as an environment variable for the project
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Create an empty `.env` file in the base directory of this project.
 
-## Learn More
+Add the following line to the `.env` file replacing `YOUR_ALCHEMY_API_KEY` with your api key.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```sh
+REACT_APP_ALCHEMY_API_KEY=YOUR_ALCHEMY_API_KEY
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Do not remove the `REACT_APP_` prefix. React uses that to import env variables.
 
-### Code Splitting
+**⚠️ Note**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+> Your Alchemy API Mainnet Key is a sensitive piece of data. If we were\
+> building an enterprise app to conquer the world we would never place\
+> this sensitive data in the client code of our blockexplorer project that\
+> could potentially be read by anyone.
+>
+> But hey, we're just learning this stuff right now, not conquering anything\
+> yet! :-) It won't be the end of the world to put the Alchemy API key in our\
+> front-end code for this project.
 
-### Analyzing the Bundle Size
+## 3. Start the webserver
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+`npm start`
 
-### Making a Progressive Web App
+Running the command above will run the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+The webpage will automatically reload when you make code changes.
 
-### Advanced Configuration
+What you'll see in the browser is Ethereum Mainnet's current block number. Not very exciting, but that's where you come in to save the day!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 4. Make the blockexplorer cool!
 
-### Deployment
+The starter code pulls down the current block number for you.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Can you get more information about the current block and display it in the page?
+Take a look at [alchemy.core.getBlock()](https://docs.alchemy.com/reference/sdk-getblock?a=eth-bootcamp) for how you might go about that.
 
-### `npm run build` fails to minify
+Blocks contains transactions. Can you get the list of transactions for a given block? Can you use [alchemy.core.getBlockWithTransactions()](https://docs.alchemy.com/reference/sdk-getblockwithtransactions?a=eth-bootcamp) for this?
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+How about getting details for individual transactions? The [alchemy.core.getTransactionReceipt()](https://docs.alchemy.com/reference/sdk-gettransactionreceipt?a=eth-bootcamp) looks handy.
+
+## 5. More ideas to think about
+
+- Connecting the dots.
+  - Allow users to click on a block listed in the webpage to get the block's details including its list of transactions
+  - From the list of transactions allow users to click on specific transactions to get the details of the transaction
+- Make an accounts page where a user can look up their balance or someone else's balance
+
+## 6. Supercharge your blockexplorer using AlchemySDK's specialized APIs
+
+By using the AlchemySDK you can really supercharge your projects with additional API functionality that isn't included in the `ethers.js` package including:
+  * NFT methods
+  * WebSocket methods
+  * Alchemy's Transact API functionality
+  * endpoints for using Alchemy's Notify Webhooks
+
+Read more about the above in the [Alchemy SDK Surface docs](https://docs.alchemy.com/reference/alchemy-sdk-api-surface-overview?a=eth-bootcamp). Using the SDK can implement the following features?
+
+- Given a contract address and token id, can you get the NFT's metadata?
+- What is the floor price of an NFT right now?
+- Did a pending transaction get mined?
+- What transfers did an address receive this year?
+
+Good luck and have fun!
